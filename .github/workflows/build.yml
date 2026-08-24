@@ -10,28 +10,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Build APK with Buildozer
+      uses: Action-Android/buildozer-action@v1.3.0
       with:
-        python-version: '3.10'
+        command: buildozer android debug
+        subfolder: .
 
-    - name: Install System Dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential git ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixin-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev openjdk-17-jdk zip unzip ccache libffi-dev libssl-dev python3-dev autoconf libtool pkg-config
-
-    - name: Install Buildozer and Cython
-      run: |
-        pip install --upgrade pip setuptools
-        pip install "cython<3.0.0" buildozer
-
-    - name: Build APK
-      run: |
-        buildozer android debug
-
-    - name: Upload APK Artifact
+    - name: Upload APK
       uses: actions/upload-artifact@v4
       with:
         name: my-app-apk
